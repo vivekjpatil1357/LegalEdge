@@ -81,30 +81,27 @@ const LawyerFilter = () => {
   useEffect(() => {
     const fetchLawyers = async () => {
       setIsLoading(true);
-      
       try {
         // Only include filters that are active
         const filterParams: LawyerFilterParams = {};
-        
         if (searchQuery) {
           filterParams.search = searchQuery;
         }
-        
         if (selectedSpecializations.length > 0) {
           filterParams.specializations = selectedSpecializations;
         }
-        
         if (minRating > 0) {
           filterParams.minRating = minRating;
         }
-        
+        if (selectedLocation && selectedLocation !== "any") {
+          filterParams.location = selectedLocation;
+        }
         if (showVerifiedOnly) {
           filterParams.verifiedOnly = true;
         }
         
         const lawyers = await getLawyers(filterParams);
         setFilteredLawyers(lawyers);
-        
         // Count active filters
         let activeFilterCount = 0;
         if (searchQuery) activeFilterCount++;
@@ -126,7 +123,7 @@ const LawyerFilter = () => {
     }, 300); // Add a small debounce for better UX
 
     return () => clearTimeout(debounceTimeout);
-  }, [searchQuery, selectedSpecializations, minRating, showVerifiedOnly]);
+  }, [searchQuery, selectedSpecializations, minRating, showVerifiedOnly, selectedLocation]);
 
   // Toggle specialization selection
   const toggleSpecialization = (specialization: string) => {
@@ -229,7 +226,7 @@ const LawyerFilter = () => {
                       <SelectContent>
                         <SelectItem value="any">Any location</SelectItem>
                         {LOCATIONS.map(location => (
-                          <SelectItem key={location} value={location}>
+                          <SelectItem key={location} value={location} >
                             {location}
                           </SelectItem>
                         ))}
@@ -359,7 +356,8 @@ const LawyerFilter = () => {
               {/* Location filter */}
               <div className="space-y-3">
                 <h3 className="font-medium">Location</h3>
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <Select value={selectedLocation} onValueChange={setSelectedLocation}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select location" />
                   </SelectTrigger>
@@ -517,8 +515,12 @@ const LawyerFilter = () => {
                             <h3 className="font-semibold">
                               {lawyer.user.first_name} {lawyer.user.last_name}
                             </h3>
-                            <p className="text-sm text-muted-foreground line-clamp-1">
+                            <p className="text-sm text-white line-clamp-1 ">
                               {lawyer.user.business_name}
+                            </p>
+
+                            <p className="text-sm ">
+                              {lawyer.user.location} 
                             </p>
                           </div>
                           {lawyer.credentials_verified && (

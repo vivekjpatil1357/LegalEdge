@@ -10,6 +10,7 @@ export interface LawyerWithUser {
   rating: number | null;
   rating_count: number | null;
   user: {
+    location: string | null;
     first_name: string | null;
     last_name: string | null;
     email: string;
@@ -23,6 +24,7 @@ export interface LawyerFilterParams {
   specializations?: string[];
   minRating?: number;
   verifiedOnly?: boolean;
+  location?: string;
 }
 
 export interface LawyersResponse {
@@ -53,7 +55,9 @@ export async function getLawyers(params?: LawyerFilterParams): Promise<LawyerWit
     if (params?.verifiedOnly) {
       queryParams.append('verifiedOnly', params.verifiedOnly.toString());
     }
-
+    if (params?.location) {
+      queryParams.append('location', params.location);
+    }
     if (params?.specializations && params.specializations.length > 0) {
       params.specializations.forEach(spec => {
         queryParams.append('specializations', spec);
