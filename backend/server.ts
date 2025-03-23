@@ -52,7 +52,7 @@ app.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res:
 
     // First, we get the users with lawyer type
     const whereClause: any = {
-      user_type: 'lawyer',
+      role: 'LAWYER',
     };
 
     // Add location filter if provided
@@ -97,7 +97,7 @@ app.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res:
     const users = await prisma.user.findMany({
       where: whereClause,
       include: {
-        lawyer: true,
+        Lawyer: true,
       }
     });
 
@@ -114,7 +114,7 @@ app.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res:
 
     // Format the response to match our expected structure
     const formattedLawyers = filteredUsers.map((user): LawyerWithUser => {
-      const lawyer = user.lawyer;
+      const lawyer = user.Lawyer;
       if (!lawyer) {
         // If for some reason a user has user_type='lawyer' but no lawyer record,
         // create a placeholder with nulls. In a real app, you might want to filter these out.
@@ -133,14 +133,14 @@ app.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res:
             email: user.email,
             phone_number: user.phone_number,
             business_name: user.business_name,
-            location: user.location
+            
           }
         };
       }
 
       return {
         lawyer_id: lawyer.lawyer_id,
-        user_id: lawyer.user_id,
+        user_id: lawyer.lawyer_id,
         profile_bio: lawyer.profile_bio,
         specialization: lawyer.specialization,
         credentials_verified: lawyer.credentials_verified,
@@ -153,7 +153,6 @@ app.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res:
           email: user.email,
           phone_number: user.phone_number,
           business_name: user.business_name,
-          location: user.location
         }
       };
     });
@@ -196,7 +195,7 @@ app.get('/api/lawyers/:id', async (req: Request<{id: string}>, res: Response) =>
 
     const formattedLawyer: LawyerWithUser = {
       lawyer_id: lawyer.lawyer_id,
-      user_id: lawyer.user_id,
+      user_id: lawyer.lawyer_id,
       profile_bio: lawyer.profile_bio,
       specialization: lawyer.specialization,
       credentials_verified: lawyer.credentials_verified,

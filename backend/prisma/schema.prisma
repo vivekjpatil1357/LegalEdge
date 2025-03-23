@@ -7,20 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  INDIVIDUAL
-  BUSINESS
-  LAWYER
-  ADMIN
-}
-
-enum ChatStatus {
-  PENDING
-  ACCEPTED
-  REJETCED
-  CLOSED
-}
-
 model User {
   user_id            Int                @id @default(autoincrement())
   role               Role
@@ -32,27 +18,27 @@ model User {
   state              String
   country            String
   phone_number       String?
-  business_name      String? // For business users
-  business_industry  String? // For business users
+  business_name      String?
+  business_industry  String?
   created_at         DateTime           @default(now())
   updated_at         DateTime           @updatedAt
   preferences        Json?
-  documents          Document[]
-  aiChats            AiChat[]
-  consultationNotes  ConsultationNote[]
-  sentChats          Chat[]             @relation("UserChats") // Chats initiated by this user
-  receivedChats      Chat[]             @relation("LawyerChats") // Chats received by this user (if lawyer)
-  sentMessages       ChatMessage[]
-  Lawyer             Lawyer?
   AdminReports       AdminReport[]
+  aiChats            AiChat[]
+  sentMessages       ChatMessage[]
+  receivedChats      Chat[]             @relation("LawyerChats")
+  sentChats          Chat[]             @relation("UserChats")
+  consultationNotes  ConsultationNote[]
+  documents          Document[]
   LawyerRatingsGiver LawyerRating[]     @relation("LawyerRatingsGiver")
+  Lawyer             Lawyer?
 
   @@map("users")
 }
 
 model Lawyer {
   lawyer_id                 Int                @id
-  profile_bio               String?            @db.Text
+  profile_bio               String?
   specialization            String[]
   credentials_verified      Boolean            @default(false)
   verification_document_url String?
@@ -60,9 +46,9 @@ model Lawyer {
   rating_count              Int                @default(0)
   created_at                DateTime           @default(now())
   updated_at                DateTime           @updatedAt
-  user                      User               @relation(fields: [lawyer_id], references: [user_id], onDelete: Cascade)
   consultationNotes         ConsultationNote[]
   LawyerRatingsReceiver     LawyerRating[]     @relation("LawyerRatingsReceiver")
+  user                      User               @relation(fields: [lawyer_id], references: [user_id], onDelete: Cascade)
 
   @@map("lawyers")
 }
@@ -80,10 +66,10 @@ model Document {
   stored            Boolean            @default(true)
   created_at        DateTime           @default(now())
   updated_at        DateTime           @updatedAt
+  userUser_id       Int?
   aiChats           AiChat[]
   consultationNotes ConsultationNote[]
   User              User?              @relation(fields: [userUser_id], references: [user_id])
-  userUser_id       Int?
 
   @@map("documents")
 }
@@ -93,25 +79,25 @@ model AiChat {
   user_id      Int
   document_id  Int?
   session_id   String    @db.Uuid
-  user_message String    @db.Text
-  ai_response  String?   @db.Text
+  user_message String
+  ai_response  String?
   timestamp    DateTime  @default(now())
+  document     Document? @relation(fields: [document_id], references: [document_id])
   user         User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  document     Document? @relation(fields: [document_id], references: [document_id], onDelete: SetNull)
 
   @@map("ai_chats")
 }
 
 model Chat {
   chat_id    Int           @id @default(autoincrement())
-  user_id    Int // Initiating user
-  lawyer_id  Int // Lawyer
+  user_id    Int
+  lawyer_id  Int
   status     ChatStatus
   created_at DateTime      @default(now())
   updated_at DateTime      @updatedAt
-  user       User          @relation("UserChats", fields: [user_id], references: [user_id], onDelete: Cascade)
-  lawyer     User          @relation("LawyerChats", fields: [lawyer_id], references: [user_id], onDelete: Cascade)
   messages   ChatMessage[]
+  lawyer     User          @relation("LawyerChats", fields: [lawyer_id], references: [user_id], onDelete: Cascade)
+  user       User          @relation("UserChats", fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@map("chats")
 }
@@ -120,7 +106,7 @@ model ChatMessage {
   message_id   Int      @id @default(autoincrement())
   chat_id      Int
   sender_id    Int
-  message_text String   @db.Text
+  message_text String
   timestamp    DateTime @default(now())
   is_read      Boolean  @default(false)
   chat         Chat     @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
@@ -132,7 +118,7 @@ model ChatMessage {
 model LegalArticle {
   article_id     Int       @id @default(autoincrement())
   title          String
-  content        String    @db.Text
+  content        String
   source_url     String?
   published_date DateTime?
   category       String?
@@ -146,7 +132,7 @@ model LegalArticle {
 model LegalEducationResource {
   resource_id   Int      @id @default(autoincrement())
   title         String
-  description   String?  @db.Text
+  description   String?
   content_url   String
   resource_type String?
   topic         String?
@@ -161,13 +147,13 @@ model ConsultationNote {
   user_id             Int
   lawyer_id           Int?
   title               String
-  content             String?   @db.Text
+  content             String?
   related_document_id Int?
   created_at          DateTime  @default(now())
   updated_at          DateTime  @updatedAt
+  lawyer              Lawyer?   @relation(fields: [lawyer_id], references: [lawyer_id])
+  document            Document? @relation(fields: [related_document_id], references: [document_id])
   user                User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  lawyer              Lawyer?   @relation(fields: [lawyer_id], references: [lawyer_id], onDelete: SetNull)
-  document            Document? @relation(fields: [related_document_id], references: [document_id], onDelete: SetNull)
 
   @@map("consultation_notes")
 }
@@ -177,7 +163,7 @@ model LawyerRating {
   user_id    Int
   lawyer_id  Int
   rating     Int
-  comment    String?  @db.Text
+  comment    String?
   created_at DateTime @default(now())
   Lawyer     Lawyer   @relation("LawyerRatingsReceiver", fields: [lawyer_id], references: [lawyer_id], onDelete: Cascade)
   User       User     @relation("LawyerRatingsGiver", fields: [user_id], references: [user_id], onDelete: Cascade)
@@ -190,14 +176,28 @@ model AdminReport {
   reported_by_user_id Int?
   reported_item_type  ReportedItemType
   reported_item_id    Int?
-  report_reason       String?          @db.Text
+  report_reason       String?
   report_status       String?          @default("pending")
-  admin_notes         String?          @db.Text
+  admin_notes         String?
   created_at          DateTime         @default(now())
   updated_at          DateTime         @updatedAt
-  User                User?            @relation(fields: [reported_by_user_id], references: [user_id], onDelete: SetNull)
+  User                User?            @relation(fields: [reported_by_user_id], references: [user_id])
 
   @@map("admin_reports")
+}
+
+enum Role {
+  INDIVIDUAL
+  BUSINESS
+  LAWYER
+  ADMIN
+}
+
+enum ChatStatus {
+  PENDING
+  ACCEPTED
+  REJETCED
+  CLOSED
 }
 
 enum ReportedItemType {
