@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { prisma } from './prisma';
 import LawyerRouter from './routes/lawyer.routes';
+import RegisterRouter from './routes/register.routes';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use('/', LawyerRouter)
+app.use(RegisterRouter)
 
 // Start the server
 app.listen(PORT, () => {
