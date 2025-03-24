@@ -38,7 +38,7 @@ export interface LawyerResponse {
   data: LawyerWithUser;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
 export async function getLawyers(params?: LawyerFilterParams): Promise<LawyerWithUser[]> {
   try {
