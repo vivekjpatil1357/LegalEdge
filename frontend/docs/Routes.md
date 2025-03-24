@@ -1,7 +1,7 @@
 **I. Authentication and User Management Routes:**
 
 *   **`/api/lawyers/auth/register` (POST):** Register a new user (individual, business, or lawyer).
-    *   Request Body: `first_name`, `last_name`, `email`, `password`, 
+    *   Request Body: `first_name`, `last_name`, `email`, `password`,`firebaseId` 
     *   Response:  User data (excluding password).
     *   Authentication: None (public route).
 
