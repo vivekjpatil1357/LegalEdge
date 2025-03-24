@@ -1,8 +1,8 @@
 **I. Authentication and User Management Routes:**
 
-*   **`/api/auth/register` (POST):** Register a new user (individual, business, or lawyer).
-    *   Request Body: `first_name`, `last_name`, `email`, `password`, `role` (`individual`, `business`, `lawyer`), `phone_number` (optional), `business_name` (optional, for businesses), `business_industry` (optional, for businesses).
-    *   Response:  User data (excluding password), JWT token.
+*   **`/api/lawyers/auth/register` (POST):** Register a new user (individual, business, or lawyer).
+    *   Request Body: `first_name`, `last_name`, `email`, `password`, 
+    *   Response:  User data (excluding password).
     *   Authentication: None (public route).
 
 *   **`/api/users/:userId` (GET):** Get a specific user's profile.
