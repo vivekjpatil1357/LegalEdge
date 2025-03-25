@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use('/', LawyerRouter)
+// app.use('/', LawyerRouter)
 app.use(RegisterRouter)
 app.use('/api/lawyers', LawyerRouter)
 app.use('/api/chats', ChatRouter)
