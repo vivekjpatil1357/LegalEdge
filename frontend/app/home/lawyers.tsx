@@ -6,12 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
 import {
   Popover,
@@ -99,7 +99,7 @@ const LawyerFilter = () => {
         if (showVerifiedOnly) {
           filterParams.verifiedOnly = true;
         }
-        
+
         const lawyers = await getLawyers(filterParams);
         setFilteredLawyers(lawyers);
         // Count active filters
@@ -109,7 +109,7 @@ const LawyerFilter = () => {
         if (selectedLocation && selectedLocation !== "any") activeFilterCount++;
         if (minRating > 0) activeFilterCount++;
         if (showVerifiedOnly) activeFilterCount++;
-        
+
         setActiveFilters(activeFilterCount);
       } catch (error) {
         console.error("Failed to fetch lawyers:", error);
@@ -127,7 +127,7 @@ const LawyerFilter = () => {
 
   // Toggle specialization selection
   const toggleSpecialization = (specialization: string) => {
-    setSelectedSpecializations(prev => 
+    setSelectedSpecializations(prev =>
       prev.includes(specialization)
         ? prev.filter(s => s !== specialization)
         : [...prev, specialization]
@@ -146,20 +146,19 @@ const LawyerFilter = () => {
   // Render star ratings
   const renderStars = (rating: number | null) => {
     if (rating === null) return null;
-    
+
     return (
       <div className="flex items-center">
         {[...Array(5)].map((_, i) => (
           <Star
             key={i}
             size={16}
-            className={`${
-              i < Math.floor(rating)
+            className={`${i < Math.floor(rating)
                 ? 'fill-yellow-400 text-yellow-400'
                 : i < rating
-                ? 'fill-yellow-400 text-yellow-400 opacity-50'
-                : 'text-gray-300'
-            }`}
+                  ? 'fill-yellow-400 text-yellow-400 opacity-50'
+                  : 'text-gray-300'
+              }`}
           />
         ))}
         <span className="ml-1 text-sm font-medium">{rating.toFixed(1)}</span>
@@ -173,7 +172,7 @@ const LawyerFilter = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h1 className="text-3xl font-bold tracking-tight">Find a Lawyer</h1>
-          
+
           <div className="flex items-center gap-2">
             {/* Mobile filters trigger */}
             <Sheet>
@@ -200,8 +199,8 @@ const LawyerFilter = () => {
                     <div className="grid grid-cols-1 gap-2">
                       {ALL_SPECIALIZATIONS.slice(0, 10).map((spec) => (
                         <div key={spec} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`mobile-spec-${spec}`} 
+                          <Checkbox
+                            id={`mobile-spec-${spec}`}
                             checked={selectedSpecializations.includes(spec)}
                             onCheckedChange={() => toggleSpecialization(spec)}
                           />
@@ -255,8 +254,8 @@ const LawyerFilter = () => {
 
                   {/* Verified filter (mobile) */}
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="mobile-verified" 
+                    <Checkbox
+                      id="mobile-verified"
                       checked={showVerifiedOnly}
                       onCheckedChange={(checked) => setShowVerifiedOnly(checked as boolean)}
                     />
@@ -319,7 +318,7 @@ const LawyerFilter = () => {
                 <div className="space-y-2">
                   {ALL_SPECIALIZATIONS.slice(0, 8).map((spec) => (
                     <div key={spec} className="flex items-center space-x-2">
-                      <Checkbox 
+                      <Checkbox
                         id={`spec-${spec}`}
                         checked={selectedSpecializations.includes(spec)}
                         onCheckedChange={() => toggleSpecialization(spec)}
@@ -338,7 +337,7 @@ const LawyerFilter = () => {
                         <div className="grid grid-cols-1 gap-2">
                           {ALL_SPECIALIZATIONS.slice(8).map((spec) => (
                             <div key={spec} className="flex items-center space-x-2">
-                              <Checkbox 
+                              <Checkbox
                                 id={`popup-spec-${spec}`}
                                 checked={selectedSpecializations.includes(spec)}
                                 onCheckedChange={() => toggleSpecialization(spec)}
@@ -393,8 +392,8 @@ const LawyerFilter = () => {
               {/* Verified filter */}
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="verified" 
+                  <Checkbox
+                    id="verified"
                     checked={showVerifiedOnly}
                     onCheckedChange={(checked) => setShowVerifiedOnly(checked as boolean)}
                   />
@@ -412,10 +411,10 @@ const LawyerFilter = () => {
                 {searchQuery && (
                   <Badge variant="secondary" className="flex items-center gap-1">
                     Search: {searchQuery}
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-4 w-4 ml-1" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 ml-1"
                       onClick={() => setSearchQuery('')}
                     >
                       <X size={12} />
@@ -425,10 +424,10 @@ const LawyerFilter = () => {
                 {selectedSpecializations.map(spec => (
                   <Badge key={spec} variant="secondary" className="flex items-center gap-1">
                     {spec}
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-4 w-4 ml-1" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 ml-1"
                       onClick={() => toggleSpecialization(spec)}
                     >
                       <X size={12} />
@@ -439,10 +438,10 @@ const LawyerFilter = () => {
                   <Badge variant="secondary" className="flex items-center gap-1">
                     <MapPin size={12} className="mr-1" />
                     {selectedLocation}
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-4 w-4 ml-1" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 ml-1"
                       onClick={() => setSelectedLocation('any')}
                     >
                       <X size={12} />
@@ -453,10 +452,10 @@ const LawyerFilter = () => {
                   <Badge variant="secondary" className="flex items-center gap-1">
                     <Star size={12} className="mr-1" />
                     {minRating.toFixed(1)}+
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-4 w-4 ml-1" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 ml-1"
                       onClick={() => setMinRating(0)}
                     >
                       <X size={12} />
@@ -466,10 +465,10 @@ const LawyerFilter = () => {
                 {showVerifiedOnly && (
                   <Badge variant="secondary" className="flex items-center gap-1">
                     Verified only
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-4 w-4 ml-1" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 ml-1"
                       onClick={() => setShowVerifiedOnly(false)}
                     >
                       <X size={12} />
@@ -493,7 +492,7 @@ const LawyerFilter = () => {
                   </div>
                   <h3 className="font-semibold text-xl">Loading lawyers...</h3>
                   <p className="text-muted-foreground mt-2 max-w-md">
-                    We're retrieving lawyers from our database, please wait.
+                    We&apos;re retrieving lawyers from our database, please wait.
                   </p>
                 </div>
               </div>
@@ -520,7 +519,7 @@ const LawyerFilter = () => {
                             </p>
 
                             <p className="text-sm ">
-                              {lawyer.user.location} 
+                              {lawyer.user.location}
                             </p>
                           </div>
                           {lawyer.credentials_verified && (
@@ -572,11 +571,11 @@ const LawyerFilter = () => {
                   </div>
                   <h3 className="font-semibold text-xl">No lawyers found</h3>
                   <p className="text-muted-foreground mt-2 max-w-md">
-                    We couldn't find any lawyers matching your search criteria. 
+                    We couldn&apos;t find any lawyers matching your search criteria.
                     Try adjusting your filters or search query.
                   </p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-4"
                     onClick={clearFilters}
                   >
