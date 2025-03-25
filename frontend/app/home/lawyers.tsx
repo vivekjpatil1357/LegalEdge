@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/sheet';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getLawyers, type LawyerWithUser, type LawyerFilterParams } from '@/app/api/lawyersApi';
-
+import { useRouter } from 'next/navigation';
 // Location options for filtering
 const LOCATIONS = [
   "Mumbai, Maharashtra",
@@ -76,7 +76,7 @@ const LawyerFilter = () => {
   const [activeFilters, setActiveFilters] = useState(0);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const router = useRouter();
   // Fetch lawyers based on current filters
   useEffect(() => {
     const fetchLawyers = async () => {
@@ -555,6 +555,11 @@ const LawyerFilter = () => {
                     <CardFooter className="p-4 pt-0 flex justify-between">
                       <Button variant="outline" size="sm">View Profile</Button>
                       <Button variant="default" size="sm">Contact</Button>
+                      <Button variant="default" size="sm" onClick={
+                        () => {
+                          router.push(`/chat/${lawyer.user_id}`);
+                        }
+                      }>Chat</Button>
                     </CardFooter>
                   </Card>
                 ))}

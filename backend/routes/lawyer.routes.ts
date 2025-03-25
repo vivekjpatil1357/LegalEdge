@@ -45,8 +45,8 @@ interface LawyerWithUser
     };
 }
 
-// API Routes
-router.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, res: Response) =>
+// get lawyers with filters
+router.get('/', async (req: Request<{}, {}, {}, LawyerQueryParams>, res: Response) =>
 {
     try {
         const {
@@ -56,7 +56,6 @@ router.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, r
             verifiedOnly,
             location
         } = req.query;
-
         // First, we get the users with lawyer type
         const whereClause: any = {
             role: 'LAWYER',
@@ -190,7 +189,7 @@ router.get('/api/lawyers', async (req: Request<{}, {}, {}, LawyerQueryParams>, r
 });
 
 // Get lawyer by ID
-router.get('/api/lawyers/:id', async (req: Request<{ id: string }>, res: Response) =>
+router.get('/:id', async (req: Request<{ id: string }>, res: Response) =>
 {
     try {
         const { id } = req.params;
@@ -257,7 +256,8 @@ router.get('/api/lawyers/:id', async (req: Request<{ id: string }>, res: Respons
     }
 });
 
-router.post('/api/lawyers/auth/register', async (req: Request, res: Response) =>
+// register lawyer
+router.post('/auth/register', async (req: Request, res: Response) =>
 {
     try {
         const {
@@ -314,10 +314,8 @@ router.post('/api/lawyers/auth/register', async (req: Request, res: Response) =>
     }
 });
 
-/**
- * Update lawyer profile
- */
-router.put('/api/lawyers/:id', async (req: Request, res: Response) => {
+// update lawyer profile
+router.put('/:id', async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: { firebaseId: req.params.id }
