@@ -59,36 +59,21 @@
 
 **V. Lawyer-User Chat Routes:**
 
-*   **`/api/chats/request` (POST):**  User requests a chat with a lawyer.
-    *   Request Body: `lawyer_id`.
-    *   Response: Chat data (with `status: 'pending'`).
-    *   Authentication: Required (JWT).
-
 *   **`/api/chats/:chatId/accept` (PUT):** Lawyer accepts a chat request.
     *   Authentication: Required (JWT). Authorization: The requested lawyer.
     *   Parameter: `chatId` (integer).
     *   Updates chat `status` to 'accepted'.
-
-*   **`/api/chats/:chatId/reject` (PUT):** Lawyer rejects a chat request.
-    *   Authentication: Required (JWT). Authorization: The requested lawyer.
-    *   Parameter: `chatId` (integer).
-    *   Updates chat `status` to 'rejected'.
-
-*   **`/api/chats/:chatId/close` (PUT):** User or lawyer closes a chat.
-    *   Authentication: Required (JWT). Authorization: User or Lawyer in the chat.
-    *   Parameter: `chatId` (integer).
-    *   Updates chat `status` to 'closed'.
-
-*   **`/api/chats` (GET):** Get a list of chats for the current user (both sent and received).
+      
+*   **`/api/chats/:uid` (GET):** Get a list of chats for the current user (both sent and received).
     *   Authentication: Required (JWT).
     *   Query Parameters: `status` (optional, filter by chat status), `page`, `limit`.
 
-*   **`/api/chats/:chatId/messages` (GET):** Get messages for a specific chat.
+*   **`/api/chats/messages/:chatId` (GET):** Get messages for a specific chat.
     *   Authentication: Required (JWT). Authorization: User or Lawyer in the chat.
     *   Parameter: `chatId` (integer).
 
-*   **`/api/chats/:chatId/messages` (POST):** Send a message in a chat.
-    *   Request Body: `message_text`.
+*   **`/api/chats/messages/:chatId` (POST):** Send a message in a chat.
+    *   Request Body: `message_text` `receiverId`.
     *   Authentication: Required (JWT). Authorization: User or Lawyer in the chat.
     *   Parameter: `chatId` (integer).
 *    **`/api/chats/:chatId/messages/:messageId` (PATCH):** To change is_read to true
