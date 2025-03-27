@@ -17,7 +17,8 @@ const preferenceOptions = [
   'Interested in Criminal Law',
 ];
 
-interface RegistrationRequest extends Request {
+interface RegistrationRequest extends Request
+{
   body: {
     firebaseId: string;
     email: string;
@@ -33,8 +34,15 @@ interface RegistrationRequest extends Request {
 
   };
 }
+//get all users
+router.get('/', async (req: Request, res: Response) =>
+{
+  const users = await prisma.user.findMany();
+  res.json(users);
+});
 
-router.post('/api/users', async (req: RegistrationRequest, res: Response) => {
+router.post('/', async (req: RegistrationRequest, res: Response) =>
+{
   try {
     const {
       firebaseId,
@@ -124,8 +132,17 @@ router.post('/api/users', async (req: RegistrationRequest, res: Response) => {
     res.status(500).json({ message: 'Failed to create user', error: error.message });
   }
 });
+//user by user_id 
+router.get('/ById/:id', async (req: Request, res: Response) =>
+{
+  console.log('giving lawyer too');
 
-router.get('/api/users/:firebaseId', async (req: Request, res: Response) => {
+  const user = await prisma.user.findUnique({ where: { user_id:parseInt( req.params.id )}, include: { Lawyer: true } });
+  res.json(user);
+});
+//user by firebase id
+router.get('/:firebaseId', async (req: Request, res: Response) =>
+{
   try {
     const { firebaseId } = req.params;
 
@@ -150,5 +167,4 @@ router.get('/api/users/:firebaseId', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to fetch user', error: error.message });
   }
 });
-
 export default router;

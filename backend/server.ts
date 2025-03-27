@@ -11,16 +11,26 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+//active users
+type User = {
+  user_id: number;
+  socketId: string;
+}
+let users: User[] = []
 // Middleware
 app.use(cors());
 app.use(express.json());
 // app.use('/', LawyerRouter)
-app.use(RegisterRouter)
+// app.use(RegisterRouter)
 app.use('/api/lawyers', LawyerRouter)
 app.use('/api/chats', ChatRouter)
-app.use('/api/users', ClientRouter)
+app.use('/api/users', RegisterRouter)
+
+
 
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+export default users

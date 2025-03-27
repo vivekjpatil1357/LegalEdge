@@ -26,7 +26,8 @@ const FINANCIAL_SPECIALIZATIONS = [
   "Insurance Law",
 ];
 
-export default function LawyerOnboarding() {
+export default function LawyerOnboarding()
+{
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -41,8 +42,10 @@ export default function LawyerOnboarding() {
   const [loading, setLoading] = useState(false);
 
   // Check auth state on mount
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+  useEffect(() =>
+  {
+    const unsubscribe = onAuthStateChanged(auth, (user) =>
+    {
       if (user) {
         setUserId(user.uid);
       } else {
@@ -54,7 +57,8 @@ export default function LawyerOnboarding() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleSpecializationChange = (specialization: string, checked: boolean) => {
+  const handleSpecializationChange = (specialization: string, checked: boolean) =>
+  {
     if (checked) {
       setSelectedSpecializations([...selectedSpecializations, specialization]);
     } else {
@@ -64,7 +68,8 @@ export default function LawyerOnboarding() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) =>
+  {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -82,7 +87,7 @@ export default function LawyerOnboarding() {
       if (!user) {
         throw new Error("No user logged in");
       }
-      
+
       // Make API call to update the lawyer profile
       const response = await fetch(`http://localhost:8000/api/lawyers/${user.uid}`, {
         method: 'PUT',
@@ -134,7 +139,7 @@ export default function LawyerOnboarding() {
             {/* Professional Bio */}
             <div className="space-y-2">
               <Label htmlFor="bio">Professional Bio</Label>
-              <Textarea 
+              <Textarea
                 id="bio"
                 placeholder="Describe your professional background, expertise, and experience..."
                 className="min-h-32 dark:bg-gray-700"
@@ -148,7 +153,7 @@ export default function LawyerOnboarding() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="city">City</Label>
-                <Input 
+                <Input
                   id="city"
                   placeholder="City"
                   className="dark:bg-gray-700"
@@ -159,7 +164,7 @@ export default function LawyerOnboarding() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="state">State/Province</Label>
-                <Input 
+                <Input
                   id="state"
                   placeholder="State/Province"
                   className="dark:bg-gray-700"
@@ -170,7 +175,7 @@ export default function LawyerOnboarding() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="country">Country</Label>
-                <Input 
+                <Input
                   id="country"
                   placeholder="Country"
                   className="dark:bg-gray-700"
@@ -187,14 +192,14 @@ export default function LawyerOnboarding() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
                 {FINANCIAL_SPECIALIZATIONS.map((specialization) => (
                   <div key={specialization} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={specialization} 
+                    <Checkbox
+                      id={specialization}
                       checked={selectedSpecializations.includes(specialization)}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked) =>
                         handleSpecializationChange(specialization, checked === true)
                       }
                     />
-                    <Label 
+                    <Label
                       htmlFor={specialization}
                       className="text-sm cursor-pointer"
                     >
@@ -205,9 +210,9 @@ export default function LawyerOnboarding() {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
+            <Button
+              type="submit"
+              className="w-full"
               disabled={loading}
             >
               {loading ? "Updating Profile..." : "Complete Setup"}

@@ -94,7 +94,7 @@ router.get('/', async (req: Request<{}, {}, {}, LawyerQueryParams>, res: Respons
 
         // Include filters for the lawyer relation
         if (Object.keys(lawyerFilters).length > 0) {
-            whereClause.lawyer = {
+            whereClause.Lawyer = {
                 ...lawyerFilters
             };
         }
